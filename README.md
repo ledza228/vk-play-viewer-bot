@@ -10,11 +10,11 @@
 ### Как запустить:
 
     pip install -r requirements.txt
-    python3 <имя_канала> [<кол-во_зрителей>]
+    python3 main.py <имя_канала> [<кол-во_зрителей>]
   
   Пример:
   
-    python3 mychanelname 100
+    python3 main.py mychanelname 100
   
   по умолчанию количество зрителей - 10
   
@@ -33,11 +33,11 @@
     
 ### How to run:
     pip install -r requirements.txt
-    python3 <chanel_name> [<viewers_amount>]
+    python3 main.py <chanel_name> [<viewers_amount>]
   
   Example:
   
-      python3 mychanelname 100
+      python3 main.py mychanelname 100
 
 By default viewers_amount value is 10
  
