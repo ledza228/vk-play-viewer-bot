@@ -52,7 +52,7 @@ def setIdParams():
 
 
 def do_auth_with_wss(wss, jwt, id):
-    auth = {"connect":{"token":jwt,"name":"js"},"id":id}
+    auth = {"connect":{"token":jwt,"name":"js","nakrutka_from":"ledza228"},"id":id}
     auth = json.dumps(auth)
     print(auth)
     wss.send(auth)
@@ -143,7 +143,7 @@ def main():
             thread = threading.Thread(target=_createViewer,)
 
         thread.start()
-        sleep(1)
+        sleep(0.1)
 
 
 def print_usage():
