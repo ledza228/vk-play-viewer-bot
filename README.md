@@ -17,8 +17,25 @@
     python3 main.py mychanelname 100
   
   по умолчанию количество зрителей - 10
+
+  <br/>
+
+#### Прокси:
+
+  На данный момент работают `socks5`, `http` и `https` прокси.
+  Они берутся из файла, который позже указывается в аргументах запуска
   
-  
+  Пример:
+    
+    python3 main.py mychannel 100 --socks5 filename.txt
+    python3 main.py mychannel --http filename.txt
+
+  `--http` - использует `https` или `http` прокси
+  `--socks5` - использует `socks5` прокси
+
+  Пример в файле `proxy.txt` это socks5 прокси.
+  Взять прокси можно вот тут: https://checkerproxy.net/getAllProxy
+
   <br/>
   <br/>
   
@@ -41,3 +58,20 @@
 
 By default viewers_amount value is 10
  
+
+#### Proxies:
+
+  There is `socks5`, `http`, `https` proxies that works with script.
+  The proxies are taken from the file that is specified in the script startup arguments
+  
+  Example:
+    
+    python3 main.py mychannel 100 --socks5 filename.txt
+    python3 main.py mychannel --http filename.txt
+
+  `--http` - start using `https` or `http` proxy
+  `--socks5` - start using `socks5` proxy
+
+  Example in `proxy.txt` file is socks5 proxy.
+  Get free proxy you can from this link: https://checkerproxy.net/getAllProxy
+
