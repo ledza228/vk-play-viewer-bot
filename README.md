@@ -24,7 +24,8 @@
 
   На данный момент работают `socks5`, `http` и `https` прокси.
   Они берутся из файла, который позже указывается в аргументах запуска
-  
+  (Лучше всего использовать socks5)
+
   Пример:
     
     python3 main.py mychannel 100 --socks5 filename.txt
@@ -63,7 +64,8 @@ By default viewers_amount value is 10
 
   There is `socks5`, `http`, `https` proxies that works with script.
   The proxies are taken from the file that is specified in the script startup arguments
-  
+  (socks5 working better, please use it)
+
   Example:
     
     python3 main.py mychannel 100 --socks5 filename.txt

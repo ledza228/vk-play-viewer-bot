@@ -4,13 +4,13 @@ import requests
 import websocket
 import threading
 import sys
-import socks
+import ssl
 
 channel_name = ""
 viewers_amount = 10
 
 #urls
-wss_url = "wss://pubsub.boosty.to/connection/websocket"
+wss_url = "wss://pubsub.vkplay.live/connection/websocket?cf_protocol_version=v2"
 api_url = "https://api.vkplay.live/v1/blog/"
 vkplay_url = "https://vkplay.live/"
 
@@ -21,10 +21,20 @@ bloger_with_id = ""
 
 proxy_arg = None
 
-def getWebSocketJWT():
-    html = requests.get(vkplay_url + channel_name).text
+proxy_stary_map = {"http": ["http://", "https://"],"socks5":["socks5://","socks5://"]}
+
+def getWebSocketJWT(proxy=None):
+    if proxy is not None:
+        proxy = {
+            "http": proxy_stary_map[proxy_arg['type']][0] + proxy,
+            "https": proxy_stary_map[proxy_arg['type']][1] + proxy
+        }
+    print(proxy)
+
+    html = requests.get(vkplay_url + channel_name, proxies=proxy, verify=False).text
     token = html[html.find("eyJhbGciOiJIUzI1NiJ9"):]
     token = token[:token.find("\"")]
+    print("got token: " + token)
     return token
 
 
@@ -41,16 +51,17 @@ def setIdParams():
     chanel_id = bloger_with_id.split(":")[1]
 
 
-
 def do_auth_with_wss(wss, jwt, id):
-    auth = {"params":{"token":jwt,"name":"js"},"id":id}
+    auth = {"connect":{"token":jwt,"name":"js"},"id":id}
     auth = json.dumps(auth)
+    print(auth)
     wss.send(auth)
 
 
 def reg_on_chanell_with_wss(wss, id):
-    reg = {"method":1,"params":{"channel":bloger_with_id},"id":id}
+    reg = {"subscribe":{"channel":"channel-viewers:"+chanel_id},"id":2}
     reg = json.dumps(reg)
+    print(reg)
     wss.send(reg)
 
 
@@ -61,24 +72,26 @@ def reg_on_publ_stream_with_wss(wss, id):
 
 
 def do_ping_with_wss(wss, id):
-    ping_send = {"method":7,"id":id}
+    ping_send = {}
     ping_send = json.dumps(ping_send)
     wss.send(ping_send)
 
 def _on_open(wss):
     print("Creating viewer!")
-    do_auth_with_wss(wss, getWebSocketJWT(), 1)
+    print(wss.jwt)
+    do_auth_with_wss(wss, wss.jwt, 1)
 
     reg_on_chanell_with_wss(wss, 2)
 
-    reg_on_publ_stream_with_wss(wss, 3)
 
-    do_ping_with_wss(wss, 4)
+    # do_ping_with_wss(wss, 4)
 
 
 
 def _on_message(wss, msg):
     print(msg)
+    if (msg == '{}'):
+        wss.send("{}")
 
 
 
@@ -94,11 +107,16 @@ def _createViewer(proxy=None):
         on_message=_on_message,
         on_error=_on_error)
 
-    if proxy is None:
-        ws.run_forever()
+    if (proxy is None):
+        ws.jwt = getWebSocketJWT()
     else:
-        ip_proxy, port_proxy = proxy.split(":")
-        ws.run_forever(http_proxy_host=ip_proxy, http_proxy_port=port_proxy, proxy_type=proxy_arg['type'])
+        ws.jwt = getWebSocketJWT(proxy)
+
+    # if proxy is None:
+    ws.run_forever(origin="https://vkplay.live")
+    # else:
+        # ip_proxy, port_proxy = proxy.split(":")
+        # ws.run_forever(origin="https://vkplay.live", http_proxy_host=ip_proxy, http_proxy_port=port_proxy, proxy_type=proxy_arg['type'])
 
 
 def parse_proxy(file_name):
@@ -117,6 +135,7 @@ def main():
     setIdParams()
 
     for i in range(viewers_amount):
+        setIdParams()
         if proxy_list is not None:
             proxy = proxy_list[i % len(proxy_list)]
             thread = threading.Thread(target=_createViewer, args=[proxy])
