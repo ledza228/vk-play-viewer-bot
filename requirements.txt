@@ -1,5 +1,5 @@
 requests
 websocket-client
 threading
-socks
+python-socks
 time
