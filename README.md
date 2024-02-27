@@ -6,6 +6,7 @@
   Сервис считает зрителей на основе количества websocket подключений, которые были зарегистрированы к какому-то стриму. Достаточно с одного и того же 
   ip создать любое количество соединений, отправить авторизационные даные (token) и подписаться на стрим. 
   При разрыве websocket соединения вы перестаете считаться зрителем. 
+  Сейчас внутри token хранится ip, с которого он был получен. И зарегестрироваться на стрим более чем 2 раза токенами с одинаковыми ip не получится. Поэтому необходим proxy, который и собирет токены с уникальными ip адресами
   
 ### Как запустить:
 
@@ -48,6 +49,7 @@
  ### Principle of work
    The service counts viewers based on websocket connection amounts, which were registered for certain stream. No matter how much ip you are using. 
    You just need to create websocket connection, send auth data (token) and subscribe on stream. If the connection was disconnected, you are not counting as viewer.
+   upd: now token contains IP field, and you will not be able to register for the stream more than 2 times with tokens with the same ip. Therefore, a proxy is needed, which collects tokens with unique ip addresses
     
 ### How to run:
     pip install -r requirements.txt
